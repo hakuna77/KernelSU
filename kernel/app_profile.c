@@ -20,6 +20,7 @@
 #include "kernel_compat.h"
 #include "klog.h" // IWYU pragma: keep
 #include "selinux/selinux.h"
+#include "su_mount_ns.h"
 
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(6, 7, 0) && defined(CONFIG_CC_IS_GCC))
 static struct group_info root_groups = {
@@ -158,6 +159,7 @@ void escape_with_root_profile(void)
 	spin_unlock_irq(&current->sighand->siglock);
 
 	setup_selinux(profile->selinux_domain);
+	setup_mount_ns(profile->namespaces);
 }
 
 void __maybe_unused escape_to_root_for_init(void)
